@@ -1,0 +1,99 @@
+html {
+	box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: 'Onest', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+	font-size: 18px;
+	line-height: 1.4;
+	color: #1A1A1A;
+	background-color: #fff;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+svg {
+  max-height: 100%;
+}
+
+button {
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+	color: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+p,
+figure {
+  margin: 0;
+}
+
+fieldset {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+.visually-hidden {
+  position: fixed;
+  transform: scale(0);
+}
+
+
+.yellow-button {
+	padding: 14px 34px;
+	margin-bottom: 24px;
+	border-radius: 36px;
+	background-color: #FFC119;
+	color: #1A1A1A;
+	font-size: 24px;
+	font-weight: 400;
+	border: 1px solid #FFC119;
+	transition: background-color .3s ease-in-out, border .3s ease-in-out;
+}
+
+.yellow-button:hover {
+	background-color: #FEC938;
+	border: 1px solid #FEC938;
+}
+
+.yellow-button:focus-visible {
+	border: 1px solid #B88600;
+	background-color: #FFC219;
+	outline: none;
+}
