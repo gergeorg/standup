@@ -1,4 +1,5 @@
 .booking {
+	padding: 50px 0;
 	width: 100%;
 	min-height: 100vh;
 	display: flex;
@@ -8,6 +9,7 @@
 
 .booking__container {
 	max-width: 1440px;
+	width: 100%;
 	margin: 0 auto;
 	padding: 0 80px;
 }
@@ -16,6 +18,7 @@
 	margin-bottom: 50px;
 	font-size: 46px;
 	font-weight: 800;
+	line-height: 1.2;
 }
 
 .booking__fieldset_user-info {
@@ -38,7 +41,10 @@
 	max-width: 380px;
 	width: 100%;
 	height: 44px;
-	padding: 10px 16px;
+	padding: 0 16px;
+	font-size: 18px;
+	line-height: 1.4;
+	color: #1A1A1A;
 	border: none;
 	border-radius: 8px;
 	background-color: #fff;
@@ -56,6 +62,14 @@
 	color: #BABABA;
 }
 
+.booking__input_valid {
+	outline: 1px solid #00992B;
+}
+
+.booking__input_invalid {
+	outline: 1px solid #900;
+}
+
 .booking__fieldset_comedians {
 	margin-bottom: 122px;
 }
@@ -71,17 +85,82 @@
 	align-items: center;
 }
 
-.booking__select_comedian {
+.booking__select {
+
 	margin-right: 8px;
+	height: 44px;
+	width: 100%;
+
+	/* background-color: #fff; */
+}
+
+.booking__select_comedian {
+	max-width: 380px;
 }
 
 .booking__select_time {
+	max-width: 183px;
 	margin-right: 18px;
 }
 
 .booking__hall {
-	padding-right: 30px;
+	padding-right: 32px;
 	background-image: url(../img/gg_qr.svg);
 	background-repeat: no-repeat;
 	background-position: right center;
+	background-size: 24px;
+	white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+	.booking__title {
+		margin-bottom: 40px;
+		font-size: 32px;
+	}
+
+	.booking__fieldset_user-info {
+		margin-bottom: 40px;
+	}
+
+	.booking__fieldset_comedians {
+		margin-bottom: 82px;
+	}
+}
+
+@media (max-width: 768px) {
+	.booking__container {
+		padding: 0 60px;
+	}
+
+	.booking__input-group {
+		flex-direction: column;
+	}
+
+	.booking__input {
+		max-width: 100%;
+	}
+}		
+
+@media (max-width: 680px) {
+	.booking {
+		padding: 30px 0;		
+}
+
+	.booking__container {
+		padding: 0 16px;
+	}
+
+	.booking__title {
+		margin-bottom: 32px;
+		font-size: 24px;
+	}
+
+	.booking__comedian {
+		flex-wrap: wrap;
+	}
+
+	.booking__select_comedian {
+		max-width: none;
+		margin-bottom: 8px;
+	}
 }

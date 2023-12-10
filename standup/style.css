@@ -1,5 +1,6 @@
 @import 'normalize.css';
 @import 'style/fonts.css';
+@import 'tom-select/dist/css/tom-select.default.css';
 @import 'style/base.css';
 @import 'style/event.css';
 @import 'style/booking.css';
