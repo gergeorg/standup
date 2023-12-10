@@ -1,6 +1,9 @@
 import TomSelect from 'tom-select'
 
-export const createComedianBlock = () => {
+const bookingComediansList = document.querySelector('.booking__comedians-list')
+const MAX_COMEDIANS = 6
+
+export const createComedianBlock = (comedians) => {
 	const bookingComedian = document.createElement('li')
 	bookingComedian.classList.add('booking__comedian')
 
@@ -16,22 +19,17 @@ export const createComedianBlock = () => {
 
 	const bookingHallBtn = document.createElement('button')
 	bookingHallBtn.classList.add('booking__hall')
+	bookingHallBtn.type = 'button'
 
 	bookingComedian.append(bookingSelectComedian, bookingSelectTime, inputHidden)
 
 	const bookingTomSelectComedian = new TomSelect(bookingSelectComedian, {
 		hideSelected: true,
 		placeholder: 'Выбрать комика',
-		options: [
-			{
-				value: 1,
-				text: 'Юлия Ахмедова',
-			},
-			{
-				value: 2,
-				text: 'Слава Комиссаренко',
-			},
-		],
+		options: comedians.map((item) => ({
+			value: item.id,
+			text: item.comedian,
+		})),
 	})
 
 	const bookingTomSelectTime = new TomSelect(bookingSelectTime, {
@@ -41,41 +39,47 @@ export const createComedianBlock = () => {
 
 	bookingTomSelectTime.disable()
 
-	bookingTomSelectComedian.on('change', () => {
+	bookingTomSelectComedian.on('change', (id) => {
 		bookingTomSelectTime.enable()
 		bookingTomSelectComedian.blur()
+		const { performances } = comedians.find((item) => item.id === id)
+		bookingTomSelectTime.clear()
+		bookingTomSelectTime.clearOptions()
 
-		bookingTomSelectTime.addOption([
-			{
-				value: 1,
-				text: '17:00',
-			},
-			{
-				value: 2,
-				text: '22:00',
-			},
-		])
+		bookingTomSelectTime.addOption(
+			performances.map((item) => ({
+				value: item.time,
+				text: item.time,
+			}))
+		)
+
+		bookingHallBtn.remove()
 	})
 
-	bookingTomSelectTime.on('change', () => {
+	bookingTomSelectTime.on('change', (time) => {
+		if (!time) return
+
+		const idComedian = bookingTomSelectComedian.getValue()
+		const { performances } = comedians.find((item) => item.id === idComedian)
+		const { hall } = performances.find((item) => item.time === time)
+
+		inputHidden.value = `${idComedian}${time}`
+
 		bookingTomSelectTime.blur()
+		bookingHallBtn.textContent = hall
 		bookingComedian.append(bookingHallBtn)
-		bookingHallBtn.textContent = 'Зал 1'
 	})
+
+	const createNextBookingComedian = () => {
+		if (bookingComediansList.children.length < MAX_COMEDIANS) {
+			const nextComediansBlock = createComedianBlock(comedians)
+			bookingComediansList.append(nextComediansBlock)
+		}
+
+		bookingTomSelectTime.off('change', createNextBookingComedian)
+	}
+
+	bookingTomSelectTime.on('change', createNextBookingComedian)
 
 	return bookingComedian
 }
-
-// <li class='booking__comedian'>
-// 	<select class='booking__select booking__select_comedian' name='comedian'>
-// 		<option value='1'>Юлия Ахмедова</option>
-// 		<option value='2 '>Слава Комиссаренко</option>
-// 	</select>
-
-// 	<select class='booking__select booking__select_time' name='time'>
-// 		<option value='1'>17:00</option>
-// 		<option value='2 '>20:00</option>
-// 	</select>
-
-// 	<button class='booking__hall'>Зал 1</button>
-// </li>
