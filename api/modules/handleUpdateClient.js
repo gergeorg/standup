@@ -1,59 +1,53 @@
-import { CLIENTS } from '../index.js'
-import { sendData, sendError } from './send.js'
-import fs from 'node:fs/promises'
+import { CLIENTS } from "../index.js";
+import { readRequestBody } from "./helpers.js";
+import { sendData, sendError } from "./send.js";
+import fs from "node:fs/promises";
 
-export const handleUpdateClient = (req, res, segments) => {
-	let body = ''
-	const ticketNumber = segments[1]
+export const handleUpdateClient = async (req, res, ticketNumber) => {
+  try {
+    const body = await readRequestBody(req);
+    const updateDataClient = JSON.parse(body);
 
-	try {
-		req.on('data', (chunk) => {
-			body += chunk
-		})
-	} catch (error) {
-		console.log('Ошибка при чтении запроса')
-		sendError(res, 500, 'Ошибка сервера при чтении запроса')
-	}
+    if (
+      !updateDataClient.fullName ||
+      !updateDataClient.phone ||
+      !updateDataClient.ticketNumber ||
+      !updateDataClient.booking
+    ) {
+      sendError(res, 400, "Неверные основные данные клиента");
+      return;
+    }
 
-	req.on('end', async () => {
-		try {
-			const updateDataClient = JSON.parse(body)
+    if (
+      updateDataClient.booking &&
+      (!updateDataClient.booking.length ||
+        !Array.isArray(updateDataClient.booking) ||
+        !updateDataClient.booking.every((item) => item.comedian && item.time))
+    ) {
+      sendError(res, 400, "Неверно заполнены поля бронирования");
+      return;
+    }
 
-			if (!updateDataClient.fullName || !updateDataClient.phone || !updateDataClient.ticketNumber || !updateDataClient.booking) {
-				sendError(res, 400, 'Не верные основные данные клиента')
-				return
-			}
+    const clientData = await fs.readFile(CLIENTS, "utf8");
+    const clients = JSON.parse(clientData);
 
-			if (
-				updateDataClient.booking &&
-				(!updateDataClient.booking.length ||
-					!Array.isArray(updateDataClient.booking) ||
-					!updateDataClient.booking.every((item) => item.comedian && item.time))
-			) {
-				sendError(res, 400, 'Отсутствует список бронирования')
-				return
-			}
+    const clientIndex = clients.findIndex(
+      (c) => c.ticketNumber === ticketNumber,
+    );
 
-			const clientData = await fs.readFile(CLIENTS, 'utf8')
-			const clients = JSON.parse(clientData)
+    if (clientIndex === -1) {
+      sendError(res, 404, "Клиент с данныи номером билета не найден");
+    }
 
-			const clientIdx = clients.findIndex((c) => c.ticketNumber === ticketNumber)
+    clients[clientIndex] = {
+      ...clients[clientIndex],
+      ...updateDataClient,
+    };
 
-			if (clientIdx === -1) {
-				sendError(res, 404, 'Клиент данным номером билета не найден')
-			}
-
-			clients[clientIdx] = {
-				...clients[clientIdx],
-				...updateDataClient,
-			}
-
-			await fs.writeFile(CLIENTS, JSON.stringify(clients))
-
-			sendData(res, clients[clientIdx])
-		} catch (error) {
-			console.error(`error: ${error}`)
-			sendError(res, 500, 'Ошибка сервера при обновлении данных')
-		}
-	})
-}
+    await fs.writeFile(CLIENTS, JSON.stringify(clients));
+    sendData(res, clients[clientIndex]);
+  } catch (error) {
+    console.error(`error: ${error}`);
+    sendError(res, 500, "Ошибка сервера при обновлении данных");
+  }
+};

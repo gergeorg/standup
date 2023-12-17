@@ -1,22 +1,22 @@
-import fs from 'node:fs/promises'
-
-import { sendData, sendError } from './send.js'
-import { CLIENTS } from '../index.js'
+import fs from "node:fs/promises";
+import { sendData, sendError } from "./send.js";
+import { CLIENTS } from "../index.js";
 
 export const handleClientsRequest = async (req, res, ticketNumber) => {
-	try {
-		const clientsData = await fs.readFile(CLIENTS, 'utf8')
-		const clients = JSON.parse(clientsData)
-		const client = clients.find((c) => ticketNumber === ticketNumber)
+  try {
+    const clientData = await fs.readFile(CLIENTS, "utf8");
+    const clients = JSON.parse(clientData);
 
-		if (!client) {
-			sendError(res, 404, 'Клиент с данным номером билета отсутствует')
-			return
-		}
+    const client = clients.find((c) => c.ticketNumber === ticketNumber);
 
-		sendData(res, client)
-	} catch (error) {
-		console.error(`Ошибка при обработке запроса ${error}`)
-		sendError(res, 500, 'Ошибка сервера при обработке запроса клиента')
-	}
-}
+    if (!client) {
+      sendError(res, 404, "Клиент с данным номером билета отсутвует");
+      return;
+    }
+
+    sendData(res, client);
+  } catch (error) {
+    console.error(`Ошибка при обработке запроса: ${error}`);
+    sendError(res, 500, "Ошибка сервера при обработке запроса клиента");
+  }
+};
