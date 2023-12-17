@@ -1,9 +1,8 @@
 import TomSelect from 'tom-select'
 
-const bookingComediansList = document.querySelector('.booking__comedians-list')
 const MAX_COMEDIANS = 6
 
-export const createComedianBlock = (comedians) => {
+export const createComedianBlock = (comedians, bookingComediansList) => {
 	const bookingComedian = document.createElement('li')
 	bookingComedian.classList.add('booking__comedian')
 
@@ -72,7 +71,7 @@ export const createComedianBlock = (comedians) => {
 
 	const createNextBookingComedian = () => {
 		if (bookingComediansList.children.length < MAX_COMEDIANS) {
-			const nextComediansBlock = createComedianBlock(comedians)
+			const nextComediansBlock = createComedianBlock(comedians, bookingComediansList)
 			bookingComediansList.append(nextComediansBlock)
 		}
 
