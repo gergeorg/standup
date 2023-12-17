@@ -11,6 +11,16 @@
 	background-size: cover;
 	background-position: center;
 	color: #fff;
+	opacity: 1;
+	visibility: visible;
+	transition: opacity .5s, visibility .5s;
+}
+
+.event__hidden {
+	opacity: 0;
+	visibility: hidden;
+	position: absolute;
+	width: 100%;
 }
 
 .event__title {
@@ -40,6 +50,16 @@
 .event__info-text {
 	font-size: 30px;
 	font-weight: 400;
+}
+
+.event__button {
+	opacity: 1;
+	visibility: visible;
+	/* transition: opacity .5s, visibility .5s; */
+}
+
+.event__button_hidden {
+	visibility: hidden;
 }
 
 .event__button_edit {

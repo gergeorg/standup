@@ -1,8 +1,9 @@
 import JustValidate from "just-validate"
 import Inputmask from 'inputmask'
 import { Notification } from './Notification'
+import { sendData } from "./api"
 
-export const initForm = (bookingForm, bookingInputFullname, bookingInputPhone, bookingInputTicket) => {
+export const initForm = (bookingForm, bookingInputFullname, bookingInputPhone, bookingInputTicket, changeSection, bookingComediansList) => {
 	const validate = new JustValidate(bookingForm, {
 		errorFieldCssClass: 'booking__input_invalid',
 		successFieldCssClass: 'booking__input_valid',
@@ -62,8 +63,12 @@ export const initForm = (bookingForm, bookingInputFullname, bookingInputPhone, b
 		Notification.getInstance().show(errorMessage.slice(0, -2), false)
 	})
 
-	bookingForm.addEventListener('submit', (e) => {
+	bookingForm.addEventListener('submit', async (e) => {
 		e.preventDefault()
+
+		if(!validate.isValid) {
+			return
+		}
 
 		const data = { booking: [] }
     const times = new Set()
@@ -80,9 +85,32 @@ export const initForm = (bookingForm, bookingInputFullname, bookingInputPhone, b
       } else {
         data[field] = value
       }
-      if (times.size !== data.booking.length) {
-				Notification.getInstance().show('Нельзя быть в одно время на 2-х выступлениях', false)
-      }
     })
+
+		if (times.size !== data.booking.length) {
+			Notification.getInstance().show('Нельзя быть в одно время на 2-х выступлениях', false)
+			return
+		}
+
+		if (!times.size) {
+			Notification.getInstance().show('Вы не выбрали комика и/или время')
+			return
+		}
+
+		const method = bookingForm.getAttribute('method')
+		let isSend = false
+
+		if (method === 'PATCH') {
+			isSend = await sendData(method, data, data.ticketNumber)
+		} else {
+			isSend = await sendData(method, data)
+		}
+
+		if (isSend) {
+			Notification.getInstance().show('Бронь принята', true)
+			changeSection()
+			bookingForm.reset()
+			bookingComediansList.textContent = ''
+		}
 	})
 }
