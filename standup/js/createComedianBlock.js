@@ -63,7 +63,7 @@ export const createComedianBlock = (comedians) => {
 		const { performances } = comedians.find((item) => item.id === idComedian)
 		const { hall } = performances.find((item) => item.time === time)
 
-		inputHidden.value = `${idComedian}${time}`
+		inputHidden.value = `${idComedian},${time}`
 
 		bookingTomSelectTime.blur()
 		bookingHallBtn.textContent = hall
