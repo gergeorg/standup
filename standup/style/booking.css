@@ -120,6 +120,26 @@
 	white-space: nowrap;
 }
 
+.booking__client-info {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 30px;
+	margin-bottom: 30px;
+}
+
+.booking__title-qr {
+	grid-column: 1 / -1;
+	margin-bottom: 20px;
+	font-size: 24px;
+}
+
+.booking__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 30px;
+}
+
+
 @media (max-width: 1024px) {
 	.booking__title {
 		margin-bottom: 40px;

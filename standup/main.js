@@ -1,11 +1,16 @@
-import { createComedianBlock } from './js/createComedianBlock.js'
 import { getComedians } from './js/api.js'
 import { initForm } from './js/initForm.js'
 import { initChangeSection } from './js/changeSection.js'
+import { initQrPage } from './js/qrPage.js'
 
 import './style.css'
 
 const init = async () => {
+	if (window.location.pathname.endsWith('qr.html')) {
+		initQrPage()
+		return
+	}
+
 	const bookingComediansList = document.querySelector('.booking__comedians-list')
 	const bookingForm = document.querySelector('.booking__form')
 	const countComedians = document.querySelector('.event__info-item_comedians .event__info-number')
